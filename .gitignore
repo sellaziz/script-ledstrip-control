@@ -1,3 +1,2 @@
-.vscode
-.pytest_cache
 argparse_test.py
+/ressources/lib/__pycache__
