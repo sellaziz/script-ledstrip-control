@@ -1,2 +1,3 @@
 argparse_test.py
 /ressources/lib/__pycache__
+.screenshot*

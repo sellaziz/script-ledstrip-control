@@ -10,6 +10,7 @@ import sys
 import argparse
 import logging
 import pyautogui
+import os
 
 import numpy as np
 from ressources.lib.Ledstrip import LedStrip
@@ -32,14 +33,25 @@ class AmbiScript:
         logging.debug("a1={}, ambi={},setRGB={},  R={},G={},B={}".format(a1, ambi,setRGB,  R,G,B))
 
     def run(self):
-        print("run.")
+        print("Run")
         if self.setRGB:
+            logging.info("Setting RGB to R={} G={} B={}".format(self.R, self.G, self.B))
             self.ledstrip.setRGB(self.R, self.G, self.B)
         elif self.a1:
+            logging.info("Setting RGB to dominant color of the Screen")
             self.ambilight(np.array(pyautogui.screenshot()))
         elif self.ambi:
-            while(True):
-                self.ambilight(np.array(pyautogui.screenshot()))
+            print("Hit CTRL+C to interrupt the process")
+            logging.info("Setting RGB to dominant color of the Screen until stop")
+            try:
+                while(True):
+                    self.ambilight(np.array(pyautogui.screenshot()))
+            except KeyboardInterrupt:
+                print('Process Interrupted!')
+                for filename in [file for file in os.listdir() if file.startswith(".screenshot")]:
+                    os.remove(filename)
+        logging.info('Disconnecting...')
+        self.ledstrip.disconnect()
         
 
     def ambilight(self, img):
